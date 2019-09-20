@@ -4,6 +4,10 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
+import lombok.NonNull;
+import okhttp3.OkHttpClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.vai.news.util.TickerProvider;
 import com.vai.news.util.NasdaqScraper;
 import com.vai.news.util.NotificationPublisher;
@@ -22,8 +26,8 @@ public class NasdaqNewsScraperLambdaModule {
 
     @Singleton
     @Provides
-    NasdaqScraper provideNasdaqScraper() {
-        return new NasdaqScraper();
+    NasdaqScraper provideNasdaqScraper(@NonNull final OkHttpClient client, @NonNull final ObjectMapper mapper) {
+        return new NasdaqScraper(client, mapper);
     }
 
     @Singleton
@@ -31,4 +35,17 @@ public class NasdaqNewsScraperLambdaModule {
     NotificationPublisher provideNotificationPublisher() {
         return new NotificationPublisher();
     }
+
+    @Singleton
+    @Provides
+    OkHttpClient provideOkHttpClient() {
+        return new OkHttpClient();
+    }
+
+    @Singleton
+    @Provides
+    ObjectMapper  provideObjectMapper() {
+        return new ObjectMapper();
+    }
+
 }

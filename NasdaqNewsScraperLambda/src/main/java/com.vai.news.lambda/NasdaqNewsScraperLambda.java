@@ -7,7 +7,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.Collection;
 
 import com.google.common.collect.ImmutableMap;
@@ -55,7 +55,8 @@ public class NasdaqNewsScraperLambda implements RequestHandler<Object, Object> {
         tickerProvider.provide()
                 .stream()
                 .map(nasdaqScraper::scrape)
-                .filter(Objects::nonNull)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .forEach(notificationPublisher::publish);
 
         return GatewayResponse.builder()

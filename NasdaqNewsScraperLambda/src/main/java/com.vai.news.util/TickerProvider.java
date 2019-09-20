@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 
 /**
- * Module to provide a list of stock tickers
+ * Module to provide a list of stock tickers.
  */
 @Log4j2
 public class TickerProvider {

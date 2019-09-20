@@ -6,7 +6,7 @@ import lombok.Builder;
 import  java.util.List;
 
 /**
- * Pojo representing a
+ * Pojo representing a News Notification.
  */
 @Builder
 @Data

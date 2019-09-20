@@ -81,7 +81,7 @@ Next, run the following command to package our Lambda function to S3:
 ```bash
 sam package \
     --output-template-file packaged.yaml \
-    --s3-bucket REPLACE_THIS_WITH_YOUR_S3_BUCKET_NAME
+    --s3-bucket nasdaq-news-scraper
 ```
 
 Next, the following command will create a Cloudformation Stack and deploy your SAM resources.

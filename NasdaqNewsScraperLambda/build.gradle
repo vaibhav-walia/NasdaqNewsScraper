@@ -3,7 +3,7 @@ plugins {
 }
 
 apply plugin: 'checkstyle'
-apply plugin: 'findbugs'
+//apply plugin: 'findbugs'
 
 repositories {
     mavenCentral()
@@ -33,6 +33,12 @@ dependencies {
     // https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-log4j2
     compile group: 'com.amazonaws', name: 'aws-lambda-java-log4j2', version: '1.1.0'
 
+    implementation 'com.squareup.okhttp3:okhttp:4.2.0'
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0.pr2'
+
+
 }
 
 task checkstyle(type: Checkstyle) {
@@ -42,4 +48,11 @@ task checkstyle(type: Checkstyle) {
     exclude '**/gen/**'
 
     classpath = files()
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
 }

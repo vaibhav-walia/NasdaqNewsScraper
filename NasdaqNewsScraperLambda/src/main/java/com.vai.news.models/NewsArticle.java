@@ -12,5 +12,5 @@ public class NewsArticle {
 
     private String title;
 
-    private String URL;
+    private String url;
 }
