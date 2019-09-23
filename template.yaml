@@ -1,9 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: >
-  AWS
-
-  Sample SAM Template for AWS
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -20,13 +16,62 @@ Resources:
       Runtime: java8
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
-          PARAM1: VALUE
+          NOTIFICATION_TOPIC_ARN:
+            Ref: NewsNotificationTopic
       Events:
         Scrape:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /scrape
             Method: get
+      Role:
+        Fn::GetAtt: [NasdaqNewsScraperLambdaExecutionRole, Arn]
+
+  NasdaqNewsScraperLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: ['sts:AssumeRole']
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: '2012-10-17'
+      Policies:
+        - PolicyName: NasdaqNewsScraperLambdaExecutionPolicy
+          PolicyDocument:
+            Statement:
+              - Action:
+                  - sns:Publish
+                Effect: Allow
+                Resource:
+                  Ref: NewsNotificationTopic
+
+  NewsNotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: NewsNotificationTopic
+
+  NewsNotificationTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Id: NewsNotificationTopicPublishPolicy
+        Statement:
+          - Sid: News-Notification-Topic-Publish-Policy
+            Action: sns:Publish
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Resource:
+              Ref: NewsNotificationTopic
+            Condition:
+              ArnEquals:
+                aws:SourceArn:
+                  Fn::GetAtt: [NasdaqNewsScraperLambda, Arn]
+      Topics:
+        - Ref: NewsNotificationTopic
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -40,4 +85,4 @@ Outputs:
     Value: !GetAtt NasdaqNewsScraperLambda.Arn
   NasdaqNewsScraperLambdaIamRole:
     Description: "Implicit IAM Role created for News Scraping function"
-    Value: !GetAtt NasdaqNewsScraperLambdaRole.Arn
+    Value: !GetAtt NasdaqNewsScraperLambdaExecutionRole.Arn

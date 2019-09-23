@@ -33,11 +33,13 @@ dependencies {
     // https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-log4j2
     compile group: 'com.amazonaws', name: 'aws-lambda-java-log4j2', version: '1.1.0'
 
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-sns
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-sns', version: '1.11.636'
+
     implementation 'com.squareup.okhttp3:okhttp:4.2.0'
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0.pr2'
-
 
 }
 
